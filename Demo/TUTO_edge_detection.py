@@ -43,9 +43,11 @@ def draw_approx_hull_polygon(img, cnts):
     min_side_len = img.shape[0] / 32  # 多边形边长的最小值 the minimum side length of polygon
     min_poly_len = img.shape[0] / 16  # 多边形周长的最小值 the minimum round length of polygon
     min_side_num = 3  # 多边形边数的最小值
+    min_area = 16.0 # 多边形面积最小值
     approxs = [cv2.approxPolyDP(cnt, min_side_len, True) for cnt in cnts]  # 以最小边长为限制画出多边形
     approxs = [approx for approx in approxs if cv2.arcLength(approx, True) > min_poly_len]  # 筛选出周长大于 min_poly_len 的多边形
     approxs = [approx for approx in approxs if len(approx) > min_side_num]  # 筛选出边长数大于 min_side_num 的多边形
+    approxs = [approx for approx in approxs if cv2.contourArea(approx) > min_area]  # 筛选出面积大于 min_area_num 的多边形
     # Above codes are written separately for the convenience of presentation.
     cv2.polylines(img, approxs, True, (0, 255, 0), 2)  # green
 
